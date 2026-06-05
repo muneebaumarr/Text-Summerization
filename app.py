@@ -8,6 +8,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+import re
 
 #FOr Downlloading the sumerize file 
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
@@ -17,6 +18,11 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import ListFlowable, ListItem
 from io import BytesIO
+
+def strip_thinking(text: str) -> str:
+    """Remove <think>...</think> blocks that reasoning models emit before the answer."""
+    return re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+
 
 # Load environment variables
 load_dotenv()
@@ -179,7 +185,7 @@ Final Professional Summary:
                 "format_instruction": format_instruction,
                 "style_instruction": style_instruction
             })
-            partial_summaries.append(summary)
+            partial_summaries.append(strip_thinking(summary))
 
         # Hierarchical Reduce — batch summaries to stay under token limits
         BATCH_SIZE = 5
@@ -196,7 +202,7 @@ Final Professional Summary:
                     "format_instruction": format_instruction,
                     "style_instruction": style_instruction
                 })
-                partial_summaries.append(merged)
+                partial_summaries.append(strip_thinking(merged))
 
         final_summary = partial_summaries[0]
 
