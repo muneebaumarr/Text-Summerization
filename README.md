@@ -2,6 +2,8 @@
 
 A professional AI-powered PDF summarization app built with LangChain and Groq.
 
+🚀 **Live Demo:** [text-summerization-ge7ef993ji5vligpjymrkw.streamlit.app](https://text-summerization-ge7ef993ji5vligpjymrkw.streamlit.app/)
+
 ---
 
 ## Features
